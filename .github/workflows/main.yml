@@ -1,36 +1,41 @@
-name: Train Model
+name: Train Model GCP
 
 on:
-    push:
-        branches:
-            - main
-        paths:
-            - 'train.py'
-            - 'requirements.txt'
+  push:
+    branches:
+      - main
+    paths:
+      - 'train.py'
+      - 'trainer/task.py'
+      - 'trainer/requirements.txt'
 
 jobs:
-    train:
-        runs-on: ubuntu-latest
+  train:
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-        - name: Run training script
-          run: python train.py
-
-        - name: Upload model
-          uses: actions/upload-artifact@v4
-          with:
-            name: model_artifact
-            path: model.joblib
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2.1.7
+      with:
+        project_id: ${{ secrets.PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+        
+    - name: Run training script
+      run: python train.py
+      env:
+        VERTEX_SA: ${{ secrets.VERTEX_SA }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        LOCATION: ${{ secrets.LOCATION }}
