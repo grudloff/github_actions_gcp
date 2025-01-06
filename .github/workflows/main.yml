@@ -43,3 +43,4 @@ jobs:
         VERTEX_SA: ${{ secrets.VERTEX_SA }}
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
         LOCATION: ${{ secrets.LOCATION }}
+        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
