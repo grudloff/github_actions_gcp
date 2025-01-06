@@ -1,0 +1,4 @@
+name: github_actions_test
+dependencies:
+  - python=3.10
+  - scikit-learn
