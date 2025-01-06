@@ -1,4 +1,5 @@
 from google.cloud import aiplatform
+from google.cloud import storage
 import os
 
 def run_training():
@@ -21,6 +22,13 @@ def run_training():
         requirements=requirements,
         staging_bucket=f"gs://{BUCKET_NAME}/staging",
     )
+
+    # print contents of the bucket
+    print(f"Contents of {BUCKET_NAME}")
+    client = storage.Client()
+    blobs = client.list_blobs(BUCKET_NAME)
+    for blob in blobs:
+        print(blob.name)
 
     VERTEX_SA = os.getenv('VERTEX_SA')
     job.run(
