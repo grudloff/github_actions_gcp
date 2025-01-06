@@ -1,63 +1,90 @@
 
-This repository contains a GitHub Actions workflow that trains a custom model using Vertex AI. The workflow is triggered by a push to the main branch.
+This repository contains a GitHub Actions workflow that trains a custom model using Vertex AI. The workflow is triggered by any push to the main branch that modifies the `trainer\task.py` file. The workflow setups the environment and calls the `train.py` script to start a custom training job in GCP. 
 
-The only assumption is that you have a GCP valid project.
+The only assumption to follow along is that you have a GCP project and a GitHub repository.
 
-## Set up environment
+## Structure
+
+```plaintext
+.github/                # GitHub Actions workflows
+    workflows/
+        main.yml
+trainer/                # Training package
+    task.py             # Training script
+    requirements.txt    # Python dependencies
+environment.yml         # Conda environment file
+README.md
+train.py                # Script to start the custom training job
+```
+## Instructions
+
+### Set up local development environment (optional)
+
+This step is optional as you may perform this steps from cloud shell. However, setting it up locally is useful as it also allows you to test the training script locally.
 
 1. Create conda environment
 
-```sh
-conda env create -f environment.yml
-```
+    ```sh
+    conda env create -f environment.yml
+    ```
 
 2. Activate conda environment
 
-```sh
-conda activate github_actions_gcp
-```
+    ```sh
+    conda activate github_actions_gcp
+    ```
 
-## Setup GCP
+3. Authenticate with gcloud
+    ```sh	
+    gcloud auth login
+    ```
 
-1. Authenticate with gcloud
-```sh	
-gcloud auth login
-```
+4. Set the project
+    ```sh
+    gcloud config set project ${PROJECT_ID}
+    ```
 
-2. Set the project
-```sh
-gcloud config set project ${PROJECT_ID}
-```
+5. Create the bucket
+    ```sh
+    gcloud storage create ${BUCKET_NAME} --location=${LOCATION}
+    ```
 
-3. Create the bucket
-```sh
-gcloud storage create ${BUCKET_NAME} --location=${LOCATION}
-```
+6. Set up uniform bucket-level access for the bucket
+    ```sh
+    gcloud storage buckets update gs://${BUCKET_NAME} --uniform-bucket-level-access
+    ```
+    > Note: This is necessary to grant access to the Workload Identity Pool over that single bucket.
 
-4. Activate necessary services
-```sh
-gcloud services enable \
-    aiplatform.googleapis.com \
-    iam.googleapis.com \
-    storage-api.googleapis.com
-```
+7. Activate necessary services
+    ```sh
+    gcloud services enable \
+        aiplatform.googleapis.com \
+        iam.googleapis.com \
+        storage-api.googleapis.com
+    ```
 
-5. Create a service account for the custom training job
-```sh
-gcloud iam service-accounts create ${VERTEX_SA} \
-    --display-name "Vertex AI Service Account"
-```
+8. Create a service account for the custom training job
+    ```sh
+    gcloud iam service-accounts create ${VERTEX_SA} \
+        --display-name "Vertex AI Service Account"
+    ```
 
-6. Grant the service account the necessary permissions
-```sh
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-    --member="serviceAccount:${VERTEX_SA}@${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/aiplatform.serviceAgent"
-```
+9. Grant the service account the necessary permissions
+    ```sh
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+        --member="serviceAccount:${VERTEX_SA}@${PROJECT_ID}.iam.gserviceaccount.com" \
+        --role="roles/aiplatform.serviceAgent"
+    ``` 
 
-## Set up Workload Identity for GitHub Actions
+### Set up Workload Identity for GitHub Actions
 
-1. Add the PROJECT_ID as a secret in your GitHub repository.
+The google auth github action provides us with multiple ways to authenticate with GCP. In this case, we will use Workload Identity. This method allows us to authenticate with GCP using the GitHub Actions token. This is useful as it allows us to avoid storing any secrets in the GitHub repository. You may check the other alternatives at the [google auth github action documentation](https://github.com/google-github-actions/auth).
+
+1. Add the following values as secrets in your GitHub repository:
+    - `PROJECT_ID`: The GCP project ID.
+    - `BUCKET_NAME`: The name of the bucket to store the training package and for staging.
+    - `LOCATION`: The location of the training job and the bucket.
+    - `VERTEX_SA`: The service account name that will be used to run the custom training job.
 
 1.  Create a Workload Identity Pool:
 
@@ -89,7 +116,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 
 1.  Create a Workload Identity **Provider** in that pool:
 
-    For security reasons, you should limit the Workload Identity Provider. A general recomendation is to restrict based on the organization. The following example shows how to restrict the provider to a specific GitHub user:
+    For security reasons, you should limit the Workload Identity Provider. A general recomendation is to restrict based on the organization. The following example shows how to restrict the provider to a specific GitHub user and repository:
 
     ```sh
     # TODO: replace ${PROJECT_ID}, ${GITHUB_USER}, and ${REPO} with your values below.
@@ -127,7 +154,14 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     federated ID tokens, and it can be done after the GitHub Action is
     configured.
 
-    Here we need to grant permissions to create the custom training job as well as using the service agent used by default in the custom training job. (You can check out the Vertex AI Service Agents [here](https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents))
+    Here we need to grant permissions to create the custom training job as well as using the service account used inside the custom training job. Specifically, we need to grant the following permissions:
+    - `roles/iam.serviceAccountUser` on the service account used to run the custom training job.
+    - `roles/storage.objectAdmin` on the bucket which will be used to store the python packages.
+        <details>
+        This is necesary because when usin the aiplatform API to create a custom job, internally it packages the training code and stores it in a bucket.  
+        </details>
+
+    - `roles/aiplatform.user` over the project, to create the training pipelines.
 
     ```sh
     # TODO: replace ${PROJECT_ID}, ${WORKLOAD_IDENTITY_POOL_ID}, ${REPO}, ${PROJECT_NUMBER} and ${VERTEX_SA}
@@ -139,10 +173,20 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     # ${WORKLOAD_IDENTITY_POOL_ID} is the full pool id, such as
     # "projects/123456789/locations/global/workloadIdentityPools/github".
     # 
-    # ${VERTEX_SA} is the service account used to run the custom training job.
+    # ${VERTEX_SA} is the service account name that will be used to run the custom training job.
 
     gcloud iam service-accounts add-iam-policy-binding \
         --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}" \
         --role="roles/iam.serviceAccountUser" \
         ${VERTEX_SA}@${PROJECT_ID}.iam.gserviceaccount.com
+
+    gcloud storage buckets add-iam-policy-binding gs://${BUCKET_NAME} \
+        --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}" \
+        --role="roles/storage.objectAdmin"
+    
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+        --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}" \
+        --role="roles/aiplatform.user"
+    
     ```
+    > Note: The propagation of the permissions may take a few minutes.

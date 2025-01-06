@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'train.py'
       - 'trainer/task.py'
-      - 'trainer/requirements.txt'
   workflow_dispatch:
 
 jobs:
