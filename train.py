@@ -10,7 +10,7 @@ def run_training():
     # job from module in gcs bucket (not local script)
     bucket_name = os.getenv('BUCKET_NAME')
 
-    with open("requirements.txt", "r") as f:
+    with open("trainer/requirements.txt", "r") as f:
         requirements = f.read().splitlines()
         requirements = list(set(requirements))
 
