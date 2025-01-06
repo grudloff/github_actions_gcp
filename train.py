@@ -1,32 +1,28 @@
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import joblib
+from google.cloud import aiplatform
+import os
 
-def train():
-    # Load the iris dataset
-    iris = load_iris()
-    X, y = iris.data, iris.target
+def run_training():
 
-    # Split the dataset into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    aiplatform.init(project=os.getenv('PROJECT_ID'), location=os.getenv('LOCATION'))
 
-    # Initialize the RandomForestClassifier
-    clf = RandomForestClassifier(n_estimators=200, random_state=42)
+    # job from module in gcs bucket (not local script)
+    bucket_name = os.getenv('BUCKET_NAME')
 
-    # Train the model
-    clf.fit(X_train, y_train)
+    with open("requirements.txt", "r") as f:
+        requirements = f.read().splitlines()
+        requirements = list(set(requirements))
 
-    # Make predictions
-    y_pred = clf.predict(X_test)
+    job = aiplatform.CustomTrainingJob(
+        display_name="xgboost-iris-training",
+        script_path="trainer/task.py",
+        container_uri="us-docker.pkg.dev/vertex-ai/training/xgboost-cpu.1-6:latest",
+        requirements=requirements,
+        staging_bucket=f"gs://{bucket_name}/staging",
+    )
 
-    # Save the model
-    joblib.dump(clf, 'model.joblib')
-
-    # Calculate the accuracy
-    accuracy = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {accuracy:.2f}')
+    job.run(
+        service_account=f"{os.getenv("VERTEX_SA")}@{os.getenv("PROJECT_ID")}.iam.gserviceaccount.com",
+    )
 
 if __name__ == '__main__':
-    train()
+    run_training()

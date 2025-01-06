@@ -1,0 +1,3 @@
+scikit-learn
+joblib
+google-cloud-aiplatform[prediction]

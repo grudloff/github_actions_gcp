@@ -1,4 +1,8 @@
-name: github_actions_test
+name: github_actions_gcp
 dependencies:
   - python=3.10
   - scikit-learn
+  - joblib
+  - conda-forge::google-cloud-sdk
+  - pip:
+    - google-cloud-aiplatform[prediction]
