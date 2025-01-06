@@ -8,7 +8,7 @@ def run_training():
     aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
     # job from module in gcs bucket (not local script)
-    bucket_name = os.getenv('BUCKET_NAME')
+    BUCKET_NAME = os.getenv('BUCKET_NAME')
 
     with open("trainer/requirements.txt", "r") as f:
         requirements = f.read().splitlines()
@@ -19,7 +19,7 @@ def run_training():
         script_path="trainer/task.py",
         container_uri="us-docker.pkg.dev/vertex-ai/training/xgboost-cpu.1-6:latest",
         requirements=requirements,
-        staging_bucket=f"gs://{bucket_name}/staging",
+        staging_bucket=f"gs://{BUCKET_NAME}/staging",
     )
 
     VERTEX_SA = os.getenv('VERTEX_SA')
