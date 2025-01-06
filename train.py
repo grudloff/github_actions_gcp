@@ -3,7 +3,9 @@ import os
 
 def run_training():
 
-    aiplatform.init(project=os.getenv('PROJECT_ID'), location=os.getenv('LOCATION'))
+    PROJECT_ID = os.getenv('PROJECT_ID')
+    LOCATION = os.getenv('LOCATION')
+    aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
     # job from module in gcs bucket (not local script)
     bucket_name = os.getenv('BUCKET_NAME')
@@ -20,8 +22,9 @@ def run_training():
         staging_bucket=f"gs://{bucket_name}/staging",
     )
 
+    VERTEX_SA = os.getenv('VERTEX_SA')
     job.run(
-        service_account=f"{os.getenv("VERTEX_SA")}@{os.getenv("PROJECT_ID")}.iam.gserviceaccount.com",
+        service_account=f"{VERTEX_SA}@{PROJECT_ID}.iam.gserviceaccount.com",
     )
 
 if __name__ == '__main__':
