@@ -23,12 +23,12 @@ def run_training():
         staging_bucket=f"gs://{BUCKET_NAME}/staging",
     )
 
-    # print contents of the bucket
-    print(f"Contents of {BUCKET_NAME}")
-    client = storage.Client()
-    blobs = client.list_blobs(BUCKET_NAME)
-    for blob in blobs:
-        print(blob.name)
+    # # print contents of the bucket
+    # print(f"Contents of {BUCKET_NAME}")
+    # client = storage.Client()
+    # blobs = client.list_blobs(BUCKET_NAME)
+    # for blob in blobs:
+    #     print(blob.name)
 
     VERTEX_SA = os.getenv('VERTEX_SA')
     job.run(
