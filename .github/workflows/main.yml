@@ -8,6 +8,7 @@ on:
       - 'train.py'
       - 'trainer/task.py'
       - 'trainer/requirements.txt'
+  workflow_dispatch:
 
 jobs:
   train:
