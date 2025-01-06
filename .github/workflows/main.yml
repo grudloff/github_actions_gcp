@@ -36,7 +36,6 @@ jobs:
       with:
         project_id: ${{ secrets.PROJECT_ID }}
         workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-        service_account: ${{ secrets.VERTEX_SA }}@${{ secrets.PROJECT_ID }}.iam.gserviceaccount.com
           
     - name: Run training script
       run: python train.py
