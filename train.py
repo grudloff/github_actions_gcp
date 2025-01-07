@@ -23,8 +23,8 @@ def run_training():
     job = aiplatform.CustomTrainingJob(
         display_name=TRAINING_NAME,
         script_path="trainer/task.py",
-        container_uri="us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest",
-        model_serving_container_image_uri="us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest",
+        container_uri="us-docker.pkg.dev/vertex-ai/training/sklearn-cpu.1-0:latest",
+        model_serving_container_image_uri="us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.1-0:latest",
         requirements=requirements,
         staging_bucket=f"gs://{BUCKET_NAME}/staging",
     )
