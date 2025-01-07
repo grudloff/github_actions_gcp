@@ -1,8 +1,8 @@
 # Ci/CD with GitHub Actions and Vertex AI
 
-This repository explores Continuous Integration and Continuous Deployment (CI/CD) using GitHub Actions in conjunction with a cloud provider, specifically Google Cloud Platform (GCP). It demonstrates how to automate the training of a custom model using Vertex AI.
+This repository explores Continuous Integration and Continuous Deployment (CI/CD) using GitHub Actions in conjunction with a cloud provider, specifically Google Cloud Platform (GCP). It demonstrates how to automate the training and deployment of a custom model using Vertex AI.
 
-The workflow is triggered by any push to the main branch that modifies the `trainer/task.py` file. The workflow sets up the environment and calls the `train.py` script to start a custom training job in GCP.
+The workflow is triggered by any push to the main branch that modifies the `trainer/task.py` file. The workflow sets up the environment, calls the `train.py` script to start a custom training job in GCP, and then deploys the trained model using `deploy.py`.
 
 The only assumption to follow along is that you have a GCP project and a GitHub repository.
 
