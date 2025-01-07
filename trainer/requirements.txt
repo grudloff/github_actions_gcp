@@ -1,3 +1,3 @@
 scikit-learn==1.0
 joblib
-google-cloud-aiplatform[prediction]
+google-cloud-aiplatform[prediction,autologging]

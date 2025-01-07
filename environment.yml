@@ -5,4 +5,4 @@ dependencies:
   - joblib
   - conda-forge::google-cloud-sdk
   - pip:
-    - google-cloud-aiplatform[prediction]
+    - google-cloud-aiplatform[prediction,autologging]
