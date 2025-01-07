@@ -23,7 +23,7 @@ def train():
     y_pred = clf.predict(X_test)
 
     # Save the model
-    filepath = f"/gcs/{os.environ["BUCKET_NAME"]}/model_artifacts/model.bst"
+    filepath = f"/gcs/{os.environ["AIP_MODEL_DIR"]}/model_artifacts/model.bst"
     joblib.dump(clf, filepath)
 
     # Calculate the accuracy

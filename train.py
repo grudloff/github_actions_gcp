@@ -1,6 +1,11 @@
 from google.cloud import aiplatform
-from google.cloud import storage
+from datetime import datetime
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
+MODEL_NAME = os.getenv('MODEL_NAME')
+TRAINING_NAME = os.getenv('TRAINING_NAME')
 
 def run_training():
 
@@ -16,17 +21,23 @@ def run_training():
         requirements = list(set(requirements))
 
     job = aiplatform.CustomTrainingJob(
-        display_name="xgboost-iris-training",
+        display_name=TRAINING_NAME,
         script_path="trainer/task.py",
-        container_uri="us-docker.pkg.dev/vertex-ai/training/xgboost-cpu.1-6:latest",
+        container_uri="us-docker.pkg.dev/vertex-ai/training/scikit-learn-cpu.0-24:latest",
+        model_serving_container_image_uri="us-docker.pkg.dev/vertex-ai/prediction/sklearn-cpu.0-24:latest",
         requirements=requirements,
         staging_bucket=f"gs://{BUCKET_NAME}/staging",
     )
 
     VERTEX_SA = os.getenv('VERTEX_SA')
-    job.run(
-        service_account=f"{VERTEX_SA}@{PROJECT_ID}.iam.gserviceaccount.com",
+    model = job.run(
+        model_display_name=MODEL_NAME,
+        service_account=f"{VERTEX_SA}@{PROJECT_ID}.iam.gserviceaccount.com"
     )
+
+    print(model.display_name)
+    print(model.resource_name)
+    print(model.uri)
 
 if __name__ == '__main__':
     run_training()

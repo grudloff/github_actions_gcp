@@ -35,8 +35,16 @@ jobs:
         project_id: ${{ secrets.PROJECT_ID }}
         workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           
-    - name: Run training script
+    - name: Training
       run: python train.py
+      env:
+        VERTEX_SA: ${{ secrets.VERTEX_SA }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        LOCATION: ${{ secrets.LOCATION }}
+        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+
+    - name: Deploying
+      run: python deploy.py
       env:
         VERTEX_SA: ${{ secrets.VERTEX_SA }}
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
