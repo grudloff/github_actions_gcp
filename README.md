@@ -21,7 +21,7 @@ train.py                # Script to start the custom training job
 ```
 ## Instructions
 
-### Setup (optional)
+### Basic Setup (optional)
 
 This step is optional as you may perform this steps from cloud shell. However, setting it up locally is useful as it also allows you to test the training script locally.
 
