@@ -81,7 +81,7 @@ This step is optional as you may perform this steps from cloud shell. However, s
 
 ### Set up Workload Identity for GitHub Actions
 
-The google auth github action provides us with multiple ways to authenticate with GCP. In this case, we will use Workload Identity. This method allows us to authenticate with GCP using the GitHub Actions token. This is useful as it allows us to avoid storing any secrets in the GitHub repository. You may check the other alternatives at the [google auth github action documentation](https://github.com/google-github-actions/auth).
+The google auth github action provides us with multiple ways to authenticate with GCP. In this case, we will use Workload Identity. This method allows us to authenticate with GCP using the GitHub Actions token. This is useful as it allows us to avoid storing any keys in the GitHub repository secrets. You may check the other alternatives at the [google auth github action documentation](https://github.com/google-github-actions/auth).
 
 1. Add the following values as secrets in your GitHub repository:
     - `PROJECT_ID`: The GCP project ID.
