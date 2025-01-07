@@ -1,7 +1,7 @@
 name: github_actions_gcp
 dependencies:
   - python=3.10
-  - scikit-learn=1.0
+  - scikit-learn=1.0.x
   - joblib
   - conda-forge::google-cloud-sdk
   - pip:
