@@ -23,6 +23,7 @@ jobs:
         
       - name: Install dependencies
         run: |
+          sudo apt-get install python3-distutils
           python -m pip install --upgrade pip
           echo "Listing installed packages"
           pip list
@@ -55,6 +56,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt-get install python3-distutils
         python -m pip install --upgrade pip
         pip install -r trainer/requirements.txt
 
