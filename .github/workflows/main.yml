@@ -32,11 +32,13 @@ jobs:
 
   train:
     runs-on: ubuntu-latest
+    needs: test
     permissions:
       contents: 'read'
       id-token: 'write'
 
     steps:
+      
     - name: Checkout repository
       uses: actions/checkout@v4
 
