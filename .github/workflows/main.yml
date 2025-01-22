@@ -23,8 +23,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          sudo apt-get install python3-distutils
-          python -m pip install --upgrade pip
+          pip install "setuptools<58.0.0"
           echo "Listing installed packages"
           pip list
           echo "Requirements file contents"
@@ -56,8 +55,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get install python3-distutils
-        python -m pip install --upgrade pip
+        pip install "setuptools<58.0.0"
         pip install -r trainer/requirements.txt
 
     - name: Authenticate to Google Cloud
