@@ -1,6 +1,6 @@
 scikit-learn~=1.0.0
 joblib
 pandas
-numpy --no-binary=numpy
+numpy==1.20.0
 pytest
 google-cloud-aiplatform[prediction,autologging]
