@@ -24,7 +24,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          echo "Listing installed packages"
+          pip list
+          echo "Requirements file contents"
+          cat trainer/requirements.txt
+          echo "Installing dependencies"
           pip install -r trainer/requirements.txt
+          echo "Installing pytest"
           pip install pytest
 
       - name: Testing
