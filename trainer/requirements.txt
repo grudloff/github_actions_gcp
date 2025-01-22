@@ -1,4 +1,5 @@
 scikit-learn~=1.0.0
 joblib
-pytest
+pandas
+numpy
 google-cloud-aiplatform[prediction,autologging]
