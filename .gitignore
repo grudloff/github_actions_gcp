@@ -1,2 +1,4 @@
 local_model_dir/
 .vscode/
+.pytest_cache/
+*.pyc
