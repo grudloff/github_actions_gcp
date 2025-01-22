@@ -17,15 +17,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
         
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          echo "Downgrading setuptools to avoid conflicts"
-          pip install "setuptools<65"
           echo "Listing installed packages"
           pip list
           echo "Requirements file contents"
@@ -58,7 +56,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install "setuptools<65"
         pip install -r trainer/requirements.txt
 
     - name: Authenticate to Google Cloud
