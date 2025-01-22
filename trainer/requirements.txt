@@ -1,5 +1,6 @@
-scikit-learn==1.0.2
+scikit-learn~=1.0.0
 joblib
 pandas
 numpy
 google-cloud-aiplatform[prediction,autologging]
+ --no-binary :all:
