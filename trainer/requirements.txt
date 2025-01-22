@@ -1,4 +1,4 @@
-scikit-learn~=1.0.0 --no-binary=scikit-learn
+scikit-learn=1.0.2
 joblib
 pandas
 numpy
