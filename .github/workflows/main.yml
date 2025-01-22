@@ -25,7 +25,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           echo "Downgrading setuptools to avoid conflicts"
-          pip install --force-reinstall setuptools<65
+          pip install "setuptools<65"
           echo "Listing installed packages"
           pip list
           echo "Requirements file contents"
@@ -58,7 +58,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install --force-reinstall setuptools<65
+        pip install "etuptools<65"
         pip install -r trainer/requirements.txt
 
     - name: Authenticate to Google Cloud
