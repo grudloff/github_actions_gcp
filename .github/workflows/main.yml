@@ -30,7 +30,7 @@ jobs:
           echo "Installing dependencies"
           pip install -r trainer/requirements.txt
           echo "Reinstall numpy"
-          pip install numpy --upgrade
+          pip install numpy --upgrade --force-reinstall
           echo "Installing pytest"
           pip install pytest
 
