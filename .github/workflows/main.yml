@@ -30,6 +30,8 @@ jobs:
           cat trainer/requirements.txt
           echo "Installing dependencies"
           pip install -r trainer/requirements.txt
+          echo "Installing pytest"
+          pip install pytest
 
       - name: Testing
         run: pytest
