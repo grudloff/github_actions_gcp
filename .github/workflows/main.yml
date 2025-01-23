@@ -30,6 +30,9 @@ jobs:
           cat trainer/requirements.txt
           echo "Installing dependencies"
           pip install -r trainer/requirements.txt
+          echo "Reinstall numpy"
+          pip uninstall numpy
+          pip install numpy
           echo "Installing pytest"
           pip install pytest
 
