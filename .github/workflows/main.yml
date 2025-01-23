@@ -28,8 +28,6 @@ jobs:
           pip list
           echo "Requirements file contents"
           cat trainer/requirements.txt
-          echo "Installing numpy"
-          pip install "numpy==1.18.5"
           echo "Installing dependencies"
           pip install -r trainer/requirements.txt
 
