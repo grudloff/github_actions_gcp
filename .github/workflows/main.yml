@@ -23,6 +23,7 @@ jobs:
         
       - name: Install dependencies
         run: |
+          pip install setuptools --upgrade
           echo "Listing installed packages"
           pip list
           echo "Requirements file contents"
@@ -54,6 +55,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        pip install setuptools --upgrade
         pip install -r trainer/requirements.txt
 
     - name: Authenticate to Google Cloud
