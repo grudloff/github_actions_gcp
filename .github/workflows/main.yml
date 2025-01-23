@@ -23,7 +23,6 @@ jobs:
         
       - name: Install dependencies
         run: |
-          pip install setuptools --upgrade
           echo "Listing installed packages"
           pip list
           echo "Requirements file contents"
@@ -31,8 +30,7 @@ jobs:
           echo "Installing dependencies"
           pip install -r trainer/requirements.txt
           echo "Reinstall numpy"
-          pip uninstall numpy
-          pip install numpy
+          pip install numpy --upgrade
           echo "Installing pytest"
           pip install pytest
 
