@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.10
   - scikit-learn==1.0.*
+  - numpy<2
   - joblib
   - pytest
   - google-cloud-sdk
