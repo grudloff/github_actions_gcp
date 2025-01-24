@@ -28,9 +28,7 @@ jobs:
           echo "Requirements file contents"
           cat trainer/requirements.txt
           echo "Installing dependencies"
-          pip install -r trainer/requirements.txt
-          echo "Reinstall numpy"
-          pip install numpy --upgrade --force-reinstall
+          pip install -r trainer/requirements.txt --no-binary :all:
           echo "Installing pytest"
           pip install pytest
 
