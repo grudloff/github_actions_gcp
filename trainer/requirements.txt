@@ -1,3 +1,4 @@
 scikit-learn==1.0.*
+numpy<2
 joblib
 google-cloud-aiplatform[prediction,autologging]

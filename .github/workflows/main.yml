@@ -28,7 +28,7 @@ jobs:
           echo "Requirements file contents"
           cat trainer/requirements.txt
           echo "Installing dependencies"
-          pip install -r trainer/requirements.txt --no-binary :all:
+          pip install -r trainer/requirements.txt
           echo "Installing pytest"
           pip install pytest
 
